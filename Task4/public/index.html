@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Album Collection</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 30px;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    input {
+      margin: 5px;
+      padding: 5px;
+    }
+
+    .album {
+      border: 1px solid #ccc;
+      padding: 15px;
+      margin-bottom: 15px;
+      background-color: #f5f5f5;
+    }
+
+    .album h3 {
+      margin-top: 0;
+    }
+
+    button {
+      cursor: pointer;
+      margin-right: 5px;
+      padding: 4px 8px;
+    }
+
+    #pagination {
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Album Collection</h1>
+
+  <h2>Add New Album</h2>
+  <form id="albumForm">
+    <input type="text" id="artist" placeholder="Artist" required />
+    <input type="text" id="title" placeholder="Title" required />
+    <input type="number" id="year" placeholder="Year" required />
+    <input type="text" id="genre" placeholder="Genre" required />
+    <input type="number" id="tracks" placeholder="Tracks" required />
+    <button type="submit">Add Album</button>
+  </form>
+
+  <h2>Albums</h2>
+  <div id="albums"></div>
+  <div id="pagination"></div>
+
+  <script>
+    const API_BASE = '/albums'
+
+    let currentPage = 1
+
+    async function loadAlbums(page = 1) {
+      try {
+        const response = await fetch(`${API_BASE}?page=${page}&limit=2`)
+        const result = await response.json()
+
+        displayAlbums(result.data)
+        displayPagination(result.pagination)
+
+        currentPage = result.pagination.currentPage
+
+      } catch (error) {
+        console.error('Error loading albums:', error)
+      }
+    }
+
+    function displayAlbums(albums) {
+      const container = document.getElementById('albums')
+
+      if (!albums || albums.length === 0) {
+        container.innerHTML = '<p>No albums found.</p>'
+        return
+      }
+
+      container.innerHTML = albums.map(album => `
+        <div class="album">
+          <h3>${album.title}</h3>
+          <p><strong>Artist:</strong> ${album.artist}</p>
+          <p><strong>Year:</strong> ${album.year}</p>
+          <p><strong>Genre:</strong> ${album.genre}</p>
+          <p><strong>Tracks:</strong> ${album.tracks}</p>
+
+          <button onclick="updateAlbum('${album._id}')">Update</button>
+          <button onclick="deleteAlbum('${album._id}')">Delete</button>
+        </div>
+      `).join('')
+    }
+
+    function displayPagination(pagination) {
+      const container = document.getElementById('pagination')
+
+      container.innerHTML = `
+        <button onclick="loadAlbums(${pagination.currentPage - 1})"
+          ${!pagination.hasPrevPage ? 'disabled' : ''}>
+          Prev
+        </button>
+
+        Page ${pagination.currentPage} / ${pagination.totalPages}
+
+        <button onclick="loadAlbums(${pagination.currentPage + 1})"
+          ${!pagination.hasNextPage ? 'disabled' : ''}>
+          Next
+        </button>
+      `
+    }
+
+    async function addAlbum(albumData) {
+      try {
+        const response = await fetch(API_BASE, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(albumData)
+        })
+
+        if (response.ok) {
+          loadAlbums(currentPage)
+        } else {
+          alert('Failed to add album')
+        }
+
+      } catch (error) {
+        console.error('Error adding album:', error)
+      }
+    }
+
+    async function updateAlbum(id) {
+      const artist = prompt('Artist:')
+      const title = prompt('Title:')
+      const year = prompt('Year:')
+      const genre = prompt('Genre:')
+      const tracks = prompt('Tracks:')
+
+      if (!artist || !title || !year || !genre || !tracks) return
+
+      await fetch(`${API_BASE}/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          artist,
+          title,
+          year: Number(year),
+          genre,
+          tracks: Number(tracks)
+        })
+      })
+
+      loadAlbums(currentPage)
+    }
+
+    async function deleteAlbum(id) {
+      await fetch(`${API_BASE}/${id}?debug=true`, {
+        method: 'DELETE'
+      })
+
+      loadAlbums(currentPage)
+    }
+
+    document.getElementById('albumForm').addEventListener('submit', (e) => {
+      e.preventDefault()
+
+      const albumData = {
+        artist: document.getElementById('artist').value,
+        title: document.getElementById('title').value,
+        year: Number(document.getElementById('year').value),
+        genre: document.getElementById('genre').value,
+        tracks: Number(document.getElementById('tracks').value)
+      }
+
+      addAlbum(albumData)
+      e.target.reset()
+    })
+
+    loadAlbums()
+  </script>
+
+</body>
+</html>
