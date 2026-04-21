@@ -176,3 +176,6 @@ app.use(session({
 
 Installed `npm install dotenv`  
 
+Pushed the project to Git Hub.  
+I will be using `Render` for this.  
+

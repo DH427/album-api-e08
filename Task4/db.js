@@ -11,10 +11,7 @@ export async function connectDB() {
       throw new Error('Database URI not defined')
     }
 
-    await mongoose.connect(uri, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
-    })
+    await mongoose.connect(uri)
 
     console.log(
       `MongoDB connected to (${
