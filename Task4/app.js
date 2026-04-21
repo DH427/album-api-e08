@@ -7,6 +7,7 @@ import { errorHandler } from './middleware/errorHandler.js'
 import passport from 'passport'
 import './middleware/passport.js'
 import 'dotenv/config'
+import MongoStore from 'connect-mongo'
 
 const app = express()
 const PORT = process.env.PORT || 3000
@@ -28,8 +29,13 @@ app.use(session({
   secret: process.env.SESSION_SECRET || 'my-secret-key',
   resave: false,
   saveUninitialized: false,
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGO_URI
+  }),
   cookie: {
-    secure: process.env.NODE_ENV === 'production'
+    secure: process.env.NODE_ENV === 'production',
+    httpOnly: true,
+    sameSite: 'lax'
   }
 }))
 

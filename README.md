@@ -158,24 +158,20 @@ stdout | tests/albums.test.js > DELETE /albums/:id > should return 404 when dele
 
 Task4 completed.  
 
-![Task4_1 screenshot](screenshots/Task4_1.png)  
-
-
-Added `const PORT = process.env.PORT || 3000` and `secret: process.env.SESSION_SECRET || 'my-secret-key',` to `app.js`.  
-
-```
-app.use(session({
-  secret: process.env.SESSION_SECRET || 'my-secret-key',
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    secure: process.env.NODE_ENV === 'production'
-  }
-}))
-```
-
 Installed `npm install dotenv`  
 
-Pushed the project to Git Hub.  
+Pushed the project to a private repository in GitHub.  
 I will be using `Render` for this.  
 
+Configuring and deploying the Web Service in `Render`:  
+
+Added the Environment variables in Render:  
+* MONGO_URI
+* SESSION_SECRET
+* NODE_ENV  
+  
+![Task4_1 screenshot](screenshots/Task4_1.png)  
+![Task4_2 screenshot](screenshots/Task4_2.png)  
+
+The application is available at https://album-api-e08.onrender.com/  
+![Task4_4 screenshot](screenshots/Task4_4.png)  
