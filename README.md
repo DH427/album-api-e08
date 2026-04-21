@@ -156,22 +156,29 @@ stdout | tests/albums.test.js > DELETE /albums/:id > should return 404 when dele
 
 ## Task 4
 
-Task4 completed.  
+Task4 completed. Deployed my application to a `Render`.  
 
 Installed `npm install dotenv`  
 
-Pushed the project to a private repository in GitHub.  
-I will be using `Render` for this.  
+1. Pushed the project to a private repository in GitHub.  
+2. Created a new Web Service using `Render`.   
+3. Configuring and deploying the Web Service in `Render`:  
+4. Added the Environment variables in Render:  
+    * MONGO_URI
+    * SESSION_SECRET
+    * NODE_ENV  
 
-Configuring and deploying the Web Service in `Render`:  
+5. To allow external connections IP access is set to `0.0.0.0/0` in MongoDB  
 
-Added the Environment variables in Render:  
-* MONGO_URI
-* SESSION_SECRET
-* NODE_ENV  
-  
+![Task4_4 screenshot](screenshots/Task4_4.png) 
+
+
+Render configuration:  
 ![Task4_1 screenshot](screenshots/Task4_1.png)  
-![Task4_2 screenshot](screenshots/Task4_2.png)  
 
-The application is available at https://album-api-e08.onrender.com/  
-![Task4_4 screenshot](screenshots/Task4_4.png)  
+Deployment:  
+![Task4_2 screenshot](screenshots/Task4_2.png)  
+![Task4_4 screenshot](screenshots/Task4_3.png)  
+
+The application is available at https://album-api-e08.onrender.com/   
+
